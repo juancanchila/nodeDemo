@@ -9,7 +9,8 @@ const app = express();
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
-
+// Enable CORS for all routes
+app.use(cors());
 // Route to return "Hola"
 app.get('/', (req, res) => {
   res.json({ message: 'Hola' });
