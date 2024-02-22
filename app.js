@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors'); // Import cors module
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes.js');
 const authorRoutes = require('./routes/authorRoutes.js');
