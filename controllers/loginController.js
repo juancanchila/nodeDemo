@@ -1,7 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
-
-const prisma = new PrismaClient();
 const secret = process.env.ACCESS_TOKEN_SECRET;
 
 // Define the loginController function
@@ -9,39 +7,46 @@ const loginController = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Retrieve user from the database using Prisma
-    const user = await prisma.user.findUnique({
-      where: {
-        username,
-      },
-    });
-
-    if (!user || user.password !== password) {
-      return res.status(401).send('Invalid username or password');
-    }
-
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      },
-      secret
-    );
-
-    // Define the structure of userData inline
-    const userData = {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      avatar: user.avatar, // Assuming you have an 'avatar' field in your user data
+    // Hardcoded admin user
+    const adminUser = {
+      id: 1,
+      username: 'admin',
+      password: 'admin', // Hardcoded password for demonstration purposes only
+      email: 'admin@example.com',
+      role: 'admin',
+      avatar: null, // Assuming you have an 'avatar' field in your user data
     };
 
-    res.json({
-      accessToken,
-      userData,
-    });
+    // Check if the provided credentials match the admin user
+    if (username === adminUser.username && password === adminUser.password) {
+      // Generate an access token
+      const accessToken = jwt.sign(
+        {
+          id: adminUser.id,
+          username: adminUser.username,
+          email: adminUser.email,
+          role: adminUser.role,
+        },
+        secret
+      );
+
+      // Define the structure of userData inline
+      const userData = {
+        id: adminUser.id,
+        username: adminUser.username,
+        email: adminUser.email,
+        avatar: adminUser.avatar,
+      };
+
+      // Send the access token and user data in the response
+      res.json({
+        accessToken,
+        userData,
+      });
+    } else {
+      // If the provided credentials are incorrect, return an error
+      return res.status(401).send('Invalid username or password');
+    }
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).send('Internal Server Error');
