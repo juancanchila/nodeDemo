@@ -37,15 +37,20 @@ model Role {
   updatedAt DateTime @updatedAt
 }
 
+
 // Define the Book model
 model Book {
   id          Int      @id @default(autoincrement())
   title       String
   description String
+  authorId   Int     // Change to Int to store the ID of the author
+  genre       String
   ratings     Rating[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+
 
 // Define the Rating model
 model Rating {
