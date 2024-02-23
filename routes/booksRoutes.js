@@ -67,10 +67,17 @@ router.get('/books', async (req, res) => {
 // Route to get books by author ID
 router.get('/by-author/:authorId', async (req, res) => {
     const { authorId } = req.params;
+
+    // Validate if authorId is a valid integer
+    const authorIdInt = parseInt(authorId);
+    if (isNaN(authorIdInt)) {
+        return res.status(400).json({ error: 'Invalid authorId. Must be an integer.' });
+    }
+
     try {
         const booksByAuthor = await prisma.book.findMany({
             where: {
-                authorId: parseInt(authorId),
+                authorId: authorIdInt,
             },
         });
         res.json(booksByAuthor);
@@ -79,6 +86,7 @@ router.get('/by-author/:authorId', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Route to get books rated by a user
 router.get('/rated-books/:userId', async (req, res) => {
