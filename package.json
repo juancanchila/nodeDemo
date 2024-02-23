@@ -17,7 +17,9 @@
     "faker": "^5.5.3",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.1",
-    "supertest": "^6.3.4"
+    "supertest": "^6.3.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",

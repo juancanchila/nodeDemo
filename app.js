@@ -7,7 +7,7 @@ const userRoutes = require('./routes/userRoutes.js');
 const booksRoutes = require('./routes/booksRoutes.js');
 const { authenticateToken } = require('./middlewares/authMiddleware');
 const app = express();
-
+const { specs, swaggerUi } = require('./swagger');
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 // Enable CORS for all routes
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 // No authentication required
 app.use('/api/auth', authRoutes); // Auth routes
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api', authenticateToken);
 // Routes for user management

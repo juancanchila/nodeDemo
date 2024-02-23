@@ -14,3 +14,8 @@ JWT
 Prisma
 Swager
 Midelwares
+
+
+Api documentation
+
+http://localhost:3000/api-docs/

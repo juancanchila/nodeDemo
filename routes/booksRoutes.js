@@ -4,6 +4,55 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /api/books:
+ *   get:
+ *     summary: Get all books
+ *     description: Retrieve a list of all books.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of books.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Book'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Book:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         authorId:
+ *           type: integer
+ *         genre:
+ *           type: string
+ *         ratings:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Rating'
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+
+
 // Route to get all books
 router.get('/books', async (req, res) => {
     try {
@@ -15,22 +64,18 @@ router.get('/books', async (req, res) => {
     }
 });
 
-// Route to create books by author ID
-router.post('/books/:authorId', async (req, res) => {
+// Route to get books by author ID
+router.get('/by-author/:authorId', async (req, res) => {
     const { authorId } = req.params;
-    const { title, description, genre } = req.body;
     try {
-        const newBook = await prisma.book.create({
-            data: {
-                title,
-                description,
+        const booksByAuthor = await prisma.book.findMany({
+            where: {
                 authorId: parseInt(authorId),
-                genre,
             },
         });
-        res.json(newBook);
+        res.json(booksByAuthor);
     } catch (error) {
-        console.error('Error creating book:', error);
+        console.error('Error fetching books by author:', error);
         res.status(500).send('Internal Server Error');
     }
 });
